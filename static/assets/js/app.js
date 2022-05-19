@@ -26,18 +26,54 @@ $(function() {
                     }
                 })
                 // console.log('123123123')
-
         })
-    })
+        var now_addr=window.location.pathname;
+//        alert(now_addr);
+        var point;
+        if(now_addr == "/login" ){point=0;}
+        if(now_addr == "/teacher_index" ){point=0;}
+        if(now_addr == "/student_index" ){point=0;}
+        if(now_addr == "/guanliban" ){point=1;}
+        if(now_addr == "/add_guanliban" ){point=1;}
+        if(now_addr == "/tjiaoshi" ){point=1;}
+        if(now_addr == "/jxjh" ){point=2;}
+        if(now_addr == "/add_jxjh" ){point=2;}
+        if(now_addr == "/kecheng" ){point=2;}
+        if(now_addr == "/paike_js" ){point=3;}
+        if(now_addr == "/add_paike_js" ){point=3;}
+        if(now_addr == "/chengji" ){point=3;}
+        if(now_addr == "/xscj" ){point=4;}
+        if(now_addr == "/add_xscj" ){point=4;}
+        if(now_addr == "/xslb" ){point=5;}
+        if(now_addr == "/add_xslb" ){point=5;}
+        $(".tpl-left-nav-item a").eq(point).addClass("active");
+//        alert(point);
+        $(".tpl-left-nav-item a").on('click', function(){
+            point= $(".tpl-left-nav-item a").index(this);
+            $(".tpl-left-nav-item a").removeClass("active");
+            $(".tpl-left-nav-item a").eq(point).addClass("active");
+        })
+})
     // ==========================
     // 侧边导航下拉列表
     // ==========================
-
+//
+//$(function(){
+//        var point;
+//        $(".tpl-left-nav-item a").eq(point).addClass("active");
+//        alert(point);
+//        $(".tpl-left-nav-item a").on('click', function(){
+//            point= $(".tpl-left-nav-item a").index(this);
+//            $(".tpl-left-nav-item a").removeClass("active");
+//            $(".tpl-left-nav-item a").eq(point).addClass("active");
+//            alert(point);
+//        })
+//})
 $('.tpl-left-nav-link-list').on('click', function() {
         $(this).siblings('.tpl-left-nav-sub-menu').slideToggle(80)
             .end()
             .find('.tpl-left-nav-more-ico').toggleClass('tpl-left-nav-more-ico-rotate');
-    })
+})
     // ==========================
     // 头部导航隐藏菜单
     // ==========================

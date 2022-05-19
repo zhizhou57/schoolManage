@@ -9,21 +9,16 @@ app = Flask(__name__)
 # 写好的数据库连接函数，
 # 传入的是table，数据表的名称，
 # 返回值是数据表中所有的数据，以元祖的格式返回
-app.config['SECRET_KEY'] = '231655'
+app.config['SECRET_KEY'] = '123456'
 # or
-app.secret_key = '231655'
+app.secret_key = '123456'
 # or
-app.config.update(SECRET_KEY='231655')
+app.config.update(SECRET_KEY='123456')
 
 def get_Table_Data(table):
-    # conn = pymysql.connect(
-    #     host='127.0.0.1', port=3306,
-    #     user='root', passwd='231655',
-    #     db='csp', charset='utf8',
-    # )
     conn = pymysql.connect(
-        host='localhost', port=3306,
-        user='root', passwd='231655',
+        host='127.0.0.1', port=3306,
+        user='root', passwd='studyhard690421',
         db='csp', charset='utf8',
     )
     cur = conn.cursor()
@@ -35,8 +30,7 @@ def get_Table_Data(table):
     return res
 def connect_db():
     """Connects to the specific database."""
-    # db = pymysql.connect(host = '127.0.0.1',user = 'root',charset = 'utf8',passwd = '231655',db = 'csp')
-    db = pymysql.connect(host = 'localhost',user = 'root',charset = 'utf8',passwd = '231655',db = 'csp')
+    db = pymysql.connect(host = '127.0.0.1',user = 'root',charset = 'utf8',passwd = 'studyhard690421',db = 'csp')
     return db
 # 启动服务器后运行的第一个函数，显示对应的网页内容
 @app.route('/', methods=['GET', 'POST'])
@@ -739,5 +733,5 @@ def add_xslb():
 
 # 主函数
 if __name__ == '__main__':
-    # app.debug = True
+    app.debug = True
     app.run()
