@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="renderer" content="webkit">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <link rel="icon" type="image/png" href="assets/i/favicon.png">
+     <link rel="icon" type="image/png" href="assets/i/favicon.png">
     <link rel="apple-touch-icon-precomposed" href="/static/assets/i/app-icon72x72@2x.png">
     <meta name="apple-mobile-web-app-title" content="Amaze UI" />
     <link rel="stylesheet" href="/static/assets/css/amazeui.min.css" />
@@ -39,6 +39,13 @@
 
 
             </ul>
+             <div class="am-topbar-brand" style="float: right;">
+             <a href="{{url_for('loginout2')}}"> <font  color="black">&ensp; &ensp; 登出</font></a>
+            </div>
+            <div class="am-topbar-brand" style="float: right;">
+           <a href="{{url_for('pwd2')}}"> <font  color="black">&ensp; &ensp; 修改密码</font></a>
+            </div>
+
         </div>
     </header>
 
@@ -63,34 +70,17 @@
                             <span>系统首页</span>
                         </a>
                     </li>
+
                     <li class="tpl-left-nav-item">
-                        <a href="/guanliban" class="nav-link">
+                        <a href="/tjiaoshi" class="nav-link tpl-left-nav-link-list">
                             <i class="am-icon-bar-chart"></i>
-                            <span>管理班级</span>
+                            <span>教室信息</span>
                         </a>
                     </li>
                     <li class="tpl-left-nav-item">
-                        <a href="/jxjh" class="nav-link tpl-left-nav-link-list">
+                        <a href="/kecheng" class="nav-link tpl-left-nav-link-list">
                             <i class="am-icon-bar-chart"></i>
-                            <span>教学计划</span>
-                        </a>
-                    </li>
-                    <li class="tpl-left-nav-item">
-                        <a href="/paike_js" class="nav-link tpl-left-nav-link-list">
-                            <i class="am-icon-bar-chart"></i>
-                            <span>教师排课</span>
-                        </a>
-                    </li>
-                    <li class="tpl-left-nav-item">
-                        <a href="/xscj" class="nav-link tpl-left-nav-link-list">
-                            <i class="am-icon-bar-chart"></i>
-                            <span>学生成绩</span>
-                        </a>
-                    </li>
-                    <li class="tpl-left-nav-item">
-                        <a href="/xslb" class="nav-link tpl-left-nav-link-list">
-                            <i class="am-icon-bar-chart"></i>
-                            <span>学生类别</span>
+                            <span>课程信息</span>
                         </a>
                     </li>
                 </ul>
@@ -98,7 +88,9 @@
         </div>
 
 
-       <div class="tpl-content-wrapper">
+
+
+<div class="tpl-content-wrapper">
 
             <div class="tpl-portlet-components">
                 <div class="portlet-title">
@@ -119,10 +111,10 @@
 
     </div>
 
-
-    <script src="/static/assets/js/jquery.min.js"></script>
+  <script src="/static/assets/js/jquery.min.js"></script>
     <script src="/static/assets/js/amazeui.min.js"></script>
     <script src="/static/assets/js/app.js"></script>
 </body>
 
 </html>
+
