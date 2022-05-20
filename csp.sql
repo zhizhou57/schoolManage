@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.6.41, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.22, for macos10.15 (x86_64)
 --
--- Host: localhost    Database: csp
+-- Host: localhost    Database: SchoolManage
 -- ------------------------------------------------------
--- Server version	5.6.41
+-- Server version	8.0.22
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,172 +16,234 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `guanliban`
+-- Table structure for table `admin_login`
 --
 
-DROP TABLE IF EXISTS `guanliban`;
+DROP TABLE IF EXISTS `admin_login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `guanliban` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `specialities` varchar(255) CHARACTER SET utf8 NOT NULL COMMENT '专业',
-  `grade` varchar(255) CHARACTER SET utf8 NOT NULL,
-  `class` varchar(255) CHARACTER SET utf8 NOT NULL,
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `admin_login` (
+  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admin_login`
+--
+
+LOCK TABLES `admin_login` WRITE;
+/*!40000 ALTER TABLE `admin_login` DISABLE KEYS */;
+INSERT INTO `admin_login` VALUES ('admin','admin');
+/*!40000 ALTER TABLE `admin_login` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `class`
+--
+
+DROP TABLE IF EXISTS `class`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `class` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `specialities` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '专业',
+  `grade` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `class` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `guanliban`
+-- Dumping data for table `class`
 --
 
-LOCK TABLES `guanliban` WRITE;
-/*!40000 ALTER TABLE `guanliban` DISABLE KEYS */;
-INSERT INTO `guanliban` VALUES (6,'信息安全','2015级','3班'),(7,'信息安全','2014级','2班'),(8,'网络工程','2015级','1班'),(9,'网络工程','2016级','1班');
-/*!40000 ALTER TABLE `guanliban` ENABLE KEYS */;
+LOCK TABLES `class` WRITE;
+/*!40000 ALTER TABLE `class` DISABLE KEYS */;
+INSERT INTO `class` VALUES (6,'信息安全','2015级','3班'),(7,'信息安全','2014级','2班'),(8,'网络工程','2015级','1班'),(9,'网络工程','2016级','1班');
+/*!40000 ALTER TABLE `class` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `jihuaxijie`
+-- Table structure for table `course`
 --
 
-DROP TABLE IF EXISTS `jihuaxijie`;
+DROP TABLE IF EXISTS `course`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jihuaxijie` (
-  `coursename` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `coursetime` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `courseplan` varchar(255) CHARACTER SET utf8 DEFAULT NULL
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `course` (
+  `course_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `teacher_id` int DEFAULT NULL,
+  `course_exam` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`course_name`),
+  KEY `course_teacher` (`teacher_id`),
+  CONSTRAINT `course_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `jihuaxijie`
+-- Dumping data for table `course`
 --
 
-LOCK TABLES `jihuaxijie` WRITE;
-/*!40000 ALTER TABLE `jihuaxijie` DISABLE KEYS */;
-INSERT INTO `jihuaxijie` VALUES ('网络安全','张三','闭卷'),('操作系统','李四','开卷');
-/*!40000 ALTER TABLE `jihuaxijie` ENABLE KEYS */;
+LOCK TABLES `course` WRITE;
+/*!40000 ALTER TABLE `course` DISABLE KEYS */;
+INSERT INTO `course` VALUES ('操作系统',12,'开卷'),('网络安全',23,'闭卷');
+/*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `paike_js`
+-- Table structure for table `course_arrange`
 --
 
-DROP TABLE IF EXISTS `paike_js`;
+DROP TABLE IF EXISTS `course_arrange`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `paike_js` (
-  `course_name` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '课程时间',
-  `course_class` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `course_plan` varchar(255) CHARACTER SET utf8 DEFAULT NULL COMMENT '课程计划'
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `course_arrange` (
+  `course_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '课程名',
+  `course_classroom` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `course_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '课程计划',
+  PRIMARY KEY (`course_name`),
+  CONSTRAINT `course_link` FOREIGN KEY (`course_name`) REFERENCES `course` (`course_name`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `paike_js`
+-- Dumping data for table `course_arrange`
 --
 
-LOCK TABLES `paike_js` WRITE;
-/*!40000 ALTER TABLE `paike_js` DISABLE KEYS */;
-INSERT INTO `paike_js` VALUES ('操作系统','教三B201','5、6节'),('网络安全','教一C502','7、8节');
-/*!40000 ALTER TABLE `paike_js` ENABLE KEYS */;
+LOCK TABLES `course_arrange` WRITE;
+/*!40000 ALTER TABLE `course_arrange` DISABLE KEYS */;
+INSERT INTO `course_arrange` VALUES ('操作系统','教三B201','5、6节'),('网络安全','教一C502','7、8节');
+/*!40000 ALTER TABLE `course_arrange` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user`
+-- Table structure for table `grade`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `grade`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `username` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8 DEFAULT NULL
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `grade` (
+  `student_id` int NOT NULL,
+  `course_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `student_score` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`student_id`,`course_name`),
+  KEY `grade_course` (`course_name`),
+  CONSTRAINT `grade_course` FOREIGN KEY (`course_name`) REFERENCES `course` (`course_name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `grade_student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `grade`
 --
 
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('admin','admin');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+LOCK TABLES `grade` WRITE;
+/*!40000 ALTER TABLE `grade` DISABLE KEYS */;
+INSERT INTO `grade` VALUES (12,'操作系统','78'),(23,'操作系统','88'),(23,'网络安全','98');
+/*!40000 ALTER TABLE `grade` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_status`
+-- Table structure for table `student`
 --
 
-DROP TABLE IF EXISTS `user_status`;
+DROP TABLE IF EXISTS `student`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_status` (
-  `id` int(11) DEFAULT NULL
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `student` (
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id` int NOT NULL,
+  `class_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `student_class` (`class_id`),
+  CONSTRAINT `student_class` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user_status`
+-- Dumping data for table `student`
 --
 
-LOCK TABLES `user_status` WRITE;
-/*!40000 ALTER TABLE `user_status` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_status` ENABLE KEYS */;
+LOCK TABLES `student` WRITE;
+/*!40000 ALTER TABLE `student` DISABLE KEYS */;
+INSERT INTO `student` VALUES ('赵五',12,8),('刘晶',23,6);
+/*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xueshengchengji`
+-- Table structure for table `student_login`
 --
 
-DROP TABLE IF EXISTS `xueshengchengji`;
+DROP TABLE IF EXISTS `student_login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `xueshengchengji` (
-  `course_name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `student_name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `student_class` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `student_score` varchar(255) CHARACTER SET utf8 DEFAULT NULL
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `student_login` (
+  `id` int NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `student_id` FOREIGN KEY (`id`) REFERENCES `student` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xueshengchengji`
+-- Dumping data for table `student_login`
 --
 
-LOCK TABLES `xueshengchengji` WRITE;
-/*!40000 ALTER TABLE `xueshengchengji` DISABLE KEYS */;
-INSERT INTO `xueshengchengji` VALUES ('12','王三','操作系统','78'),('33','刘四','网络安全','88'),('23','李四','操作系统','88'),('23','李四','网络安全','98');
-/*!40000 ALTER TABLE `xueshengchengji` ENABLE KEYS */;
+LOCK TABLES `student_login` WRITE;
+/*!40000 ALTER TABLE `student_login` DISABLE KEYS */;
+INSERT INTO `student_login` VALUES (12,'admin'),(23,'admin');
+/*!40000 ALTER TABLE `student_login` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `xueshengleibie`
+-- Table structure for table `teacher`
 --
 
-DROP TABLE IF EXISTS `xueshengleibie`;
+DROP TABLE IF EXISTS `teacher`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `xueshengleibie` (
-  `name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `number` varchar(255) DEFAULT NULL,
-  `specialities` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `class` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8 DEFAULT NULL
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `teacher` (
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `id` int NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `xueshengleibie`
+-- Dumping data for table `teacher`
 --
 
-LOCK TABLES `xueshengleibie` WRITE;
-/*!40000 ALTER TABLE `xueshengleibie` DISABLE KEYS */;
-INSERT INTO `xueshengleibie` VALUES ('王三','12','信息安全','15-1','12'),('李四','23','信息安全','15-2','23');
-/*!40000 ALTER TABLE `xueshengleibie` ENABLE KEYS */;
+LOCK TABLES `teacher` WRITE;
+/*!40000 ALTER TABLE `teacher` DISABLE KEYS */;
+INSERT INTO `teacher` VALUES ('王三',12),('李四',23);
+/*!40000 ALTER TABLE `teacher` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teacher_login`
+--
+
+DROP TABLE IF EXISTS `teacher_login`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `teacher_login` (
+  `id` int NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `teacher_id` FOREIGN KEY (`id`) REFERENCES `teacher` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teacher_login`
+--
+
+LOCK TABLES `teacher_login` WRITE;
+/*!40000 ALTER TABLE `teacher_login` DISABLE KEYS */;
+INSERT INTO `teacher_login` VALUES (12,'admin'),(23,'teacherpassword');
+/*!40000 ALTER TABLE `teacher_login` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -193,4 +255,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-20 13:40:55
+-- Dump completed on 2022-05-20 11:23:31

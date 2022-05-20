@@ -69,13 +69,13 @@
                     </li>
 
                     <li class="tpl-left-nav-item">
-                        <a href="/tjiaoshi" class="nav-link tpl-left-nav-link-list">
+                        <a href="/classroom" class="nav-link tpl-left-nav-link-list">
                             <i class="am-icon-bar-chart"></i>
                             <span>教室信息</span>
                         </a>
                     </li>
                     <li class="tpl-left-nav-item">
-                        <a href="/kecheng" class="nav-link tpl-left-nav-link-list">
+                        <a href="/course" class="nav-link tpl-left-nav-link-list">
                             <i class="am-icon-bar-chart"></i>
                             <span>课程信息</span>
                         </a>
@@ -92,8 +92,6 @@
 
             <div class="tpl-portlet-components">
                 <div class="portlet-title">
-
-
                             <table>
                                 <tr>
                                 <form class="am-form" method="post" action={{path}}>
@@ -105,10 +103,6 @@
                                 </tr>
                                 </table>
                                 <br>
-
-
-
-
                 </div>
                 <div class="tpl-block">
 
@@ -117,10 +111,10 @@
                             <form class="am-form">
                                 <table class="am-table am-table-striped am-table-hover table-main">
                                     <tbody>
-                                        <td>{{titile.a}}</td>
-                                        <td>{{titile.b}}</td>
-                                        <td>{{titile.c}}</td>
-                                        <td>{{titile.d}}</td>
+                                        <td>{{title.a}}</td>
+                                        <td>{{title.b}}</td>
+                                        <td>{{title.c}}</td>
+                                        <td>{{title.d}}</td>
                                         {% for post in posts %}
                                         <tr>
                                             <td>{{post.a}}</td>
@@ -141,18 +135,7 @@
                 </div>
                 <div class="tpl-alert"></div>
             </div>
-
-
-
-
-
-
-
-
-
-
         </div>
-
     </div>
 
 
