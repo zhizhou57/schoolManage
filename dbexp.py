@@ -66,53 +66,53 @@ def login():
                 # db.commit()
                 # db.close()
                 # return render_template('admin_index.html', error=error,name=z[0][0])
-                return render_template('admin_index.html', name=session['logged_th'])
+                return render_template('admin_index.html', name=session['logged_admin'])
         if request.form['classname']=='teacher':
             db = connect_db()
             cur = db.cursor()
-            cur.execute('select name, password from teacher, teacher_login where teacher.id = teacher_login.id')
+            # cur.execute('select name, password from teacher, teacher_login where teacher.id = teacher_login.id')
+            cur.execute('select id, password from teacher_login')
             pas = dict(cur.fetchall())
+            db.commit()
             db.close()
-            if pas.get(request.form['username']) == None :
+            if pas.get(int(request.form['username'])) == None :
                 flash("账号错误，请重新输入...")
                 return render_template('login.html')
-            elif request.form['password'] != pas[request.form['username']]:
+            elif request.form['password'] != pas[int(request.form['username'])]:
                 flash("密码错误，请重新输入...")
                 return render_template('login.html')
             else:
-                session['logged_th'] = request.form['username']
-                # db = connect_db()
-                # cur = db.cursor()
-                # sql = 'select username from user where username=%s'
-                # s=cur.execute(sql,(session['logged_th']))
-                # z=cur.fetchmany(s)
-                # db.commit()
-                # db.close()
+                db = connect_db()
+                cur = db.cursor()
+                cur.execute('select name from teacher where id=%s', (request.form['username']))
+                name = cur.fetchone()[0]
+                session['logged_th'] = name
+                session['logged_th_id'] = request.form['username']
+                db.close()
                 return render_template('teacher_index.html', name=session['logged_th'])
         if request.form['classname']=='student':
             db = connect_db()
             cur = db.cursor()
-            sql = 'select name,password from student, student_login where student.id=student_login.id'
+            sql = 'select id, password from student_login'
+            # sql = 'select name,password from student, student_login where student.id=student_login.id'
             cur.execute(sql)
             pas=dict(cur.fetchall())
             db.commit()
             db.close()
-            if pas.get(request.form['username']) == None :
+            if pas.get(int(request.form['username'])) == None :
                 flash("账号错误，请重新输入...")
                 return render_template('login.html')
-            if pas[request.form['username']] != request.form['password']:
+            if pas[int(request.form['username'])] != request.form['password']:
                 flash("密码错误，请重新输入...")
                 return render_template('login.html')
             else :
-                session['logged_st'] = request.form['username']
-                # db = connect_db()
-                # cur = db.cursor()
-                # sql = 'select name from xueshengleibie where number=%s'
-                # s=cur.execute(sql,(session['logged_st']))
-                # z=cur.fetchmany(s)
-                # db.commit()
-                # db.close()
-                print(session['logged_st'])
+                db = connect_db()
+                cur = db.cursor()
+                cur.execute('select name from student where id=%s', (request.form['username']))
+                name = cur.fetchone()[0]
+                session['logged_st'] = name
+                session['logged_st_id'] = request.form['username']
+                # print(session['logged_st'])
                 return render_template('student_index.html', name=session['logged_st'])
     return render_template('login.html')
 
@@ -202,7 +202,193 @@ def student_index():
     # z=cur.fetchmany(s)
     # db.commit()
     # db.close()
-    return render_template('student_index.html',name=session['logged_st'])
+    return render_template('student_index.html', name=session['logged_st'])
+
+@app.route('/classroom_stu', methods=['GET','POST'])
+def classroom_stu():
+    if not session.get('logged_st'):
+        flash('请先登录，再访问页面...')
+        return redirect(url_for('login'))
+    error = None
+    # 调用数据库函数，获取数据
+    db = connect_db()
+    cur = db.cursor()
+
+    id = session['logged_st_id']
+    sql = 'select * from course_arrange where course_name in (select course_name from course where teacher_id=%s)'
+    cur.execute(sql, (id))
+    data=cur.fetchall()
+    db.commit()
+    db.close()
+
+    # 用列表的格式存放全部数据
+
+    title={
+        'a':'课程名称',
+        'b':'上课地点',
+        'c':'上课时间',
+    }
+    url='classroom'
+    path="/classroom"
+    posts = []
+    for value in data:
+        dict_data = {}
+        dict_data['a'] = value[0]
+        dict_data['b'] = value[1]
+        dict_data['c'] = value[2]
+        posts.append(dict_data)
+    if request.method=='POST':
+        if request.form['test']=='delete':
+            db = connect_db()
+            cur = db.cursor()
+            sql = 'delete from course_arrange where coursename = %s'
+            cur.execute(sql,(request.form['aaa']))
+            db.commit()
+            db.close()
+            flash('删除成功！')
+        # 搜索
+        if request.form['test']=='search':
+            db = connect_db()
+            cur = db.cursor()
+            sql='select * from course_arrange where course_name = %s'
+            s = cur.execute(sql,(request.form['bbb']))
+            if s != 0:
+                z=cur.fetchmany(s)
+                posts = []
+                for value in data:
+                    dict_data = {}
+                    dict_data['a'] = value[0]
+                    dict_data['b'] = value[1]
+                    dict_data['c'] = value[2]
+                    posts.append(dict_data)
+            else:
+                flash('未查询到...')
+        return redirect(url_for('classroom'))
+
+    return render_template('student.html', posts=posts,title=title,path=path,url=url)
+
+# 显示课程的函数页面
+@app.route('/course_stu', methods=['GET','POST'])
+def course_stu():
+    if not session.get('logged_st'):
+        flash('请先登录，再访问页面...')
+        return redirect(url_for('login'))
+    url='course'
+    path="/course"
+    # 调用数据库函数，获取数据
+    db = connect_db()
+    cur = db.cursor()
+    sql = 'select id from teacher where name = %s'
+    cur.execute(sql, (session['logged_st']))
+    id = cur.fetchone()[0]
+    print(id)
+    sql = 'select course_name, course_exam from course where teacher_id=%s'
+    cur.execute(sql, (id))
+    data=cur.fetchall()
+    print(data)
+    db.commit()
+    db.close()
+
+    title={
+        'a':'课程名称',
+        'b':'任课老师',
+        'c':'考核方式',
+    }
+    # 用列表的格式存放全部数据
+    posts = []
+    for value in data:
+        dict_data = {}
+        dict_data['a'] = value[0]
+        dict_data['b'] = session['logged_th']
+        dict_data['c'] = value[1]
+        posts.append(dict_data)
+    if request.method=='POST':
+        if request.form['test']=='delete':
+            db = connect_db()
+            cur = db.cursor()
+            sql = 'delete from course_arrange where coursename = %s'
+            cur.execute(sql,(request.form['aaa']))
+            db.commit()
+            db.close()
+            flash('删除成功！')
+        # 搜索
+        if request.form['test']=='search':
+            db = connect_db()
+            cur = db.cursor()
+            sql='select * from course_arrange where course_name = %s'
+            s = cur.execute(sql,(request.form['bbb']))
+            if s != 0:
+                z=cur.fetchmany(s)
+                posts = []
+                for value in data:
+                    dict_data = {}
+                    dict_data['a'] = value[0]
+                    dict_data['b'] = session['logged_th']
+                    dict_data['c'] = value[1]
+                    posts.append(dict_data)
+            else:
+                flash('未查询到...')
+        return redirect(url_for('course'))
+    # print posts
+    return render_template('student.html', posts=posts,title=title, path=path, url=url)
+
+# 学生成绩显示的界面
+@app.route('/score', methods=['GET','POST'])
+def score():
+    if not session.get('logged_st'):
+        flash('请先登录，再访问页面...')
+        return redirect(url_for('login'))
+    url='score'
+    path="/score"
+    # 调用数据库函数，获取数据
+    db = connect_db()
+    cur = db.cursor()
+    sql = 'select id from student where name = %s'
+    cur.execute(sql, (session['logged_st']))
+    id = cur.fetchone()[0]
+    print(id)
+    sql = 'select course_name, student_score from grade where student_id=%s'
+    cur.execute(sql, (id))
+    data=cur.fetchall()
+    print(data)
+    db.commit()
+    db.close()
+
+    title={
+        'a':'课程名称',
+        'b':'学生姓名',
+        'c':'考试成绩',
+    }
+    # 用列表的格式存放全部数据
+    posts = []
+    for value in data:
+        dict_data = {}
+        dict_data['a'] = value[0]
+        dict_data['b'] = session['logged_st']
+        dict_data['c'] = value[1]
+        posts.append(dict_data)
+    if request.method=='POST':
+        # 搜索
+        if request.form['test']=='search':
+            db = connect_db()
+            cur = db.cursor()
+            sql='select course_name, student_score from grade where course_name = %s'
+            s = cur.execute(sql,(request.form['bbb']))
+            if s != 0:
+                z=cur.fetchmany(s)
+                posts = []
+                for value in data:
+                    dict_data = {}
+                    dict_data['a'] = value[0]
+                    dict_data['b'] = session['logged_st']
+                    dict_data['c'] = value[1]
+                    posts.append(dict_data)
+            else:
+                flash('未查询到...')
+        return redirect(url_for('score'))
+    # print posts
+    return render_template('student.html', posts=posts,title=title, path=path, url=url)
+
 
 # 显示教师首页的函数，可以显示首页里的信息
 @app.route('/teacher_index', methods=['GET'])
@@ -297,11 +483,9 @@ def course():
     sql = 'select id from teacher where name = %s'
     cur.execute(sql, (session['logged_th']))
     id = cur.fetchone()[0]
-    print(id)
     sql = 'select course_name, course_exam from course where teacher_id=%s'
     cur.execute(sql, (id))
     data=cur.fetchall()
-    print(data)
     db.commit()
     db.close()
 
@@ -355,10 +539,10 @@ def guanliban():
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     # 调用数据库函数，获取数据
-    data = get_Table_Data('guanliban')
+    data = get_Table_Data('class')
     # 用列表的格式存放全部数据
-    titile={
-        'a':'ID',
+    title={
+        'a':'学号',
         'b':'专业',
         'c':'年级',
         'd':'班级'
@@ -377,7 +561,7 @@ def guanliban():
         if request.form['test']=='delete':
             db = connect_db()
             cur = db.cursor()
-            sql = 'delete from guanliban where id = %s '
+            sql = 'delete from class where id = %s '
             cur.execute(sql,(request.form['aaa']))
             db.commit()
             db.close()
@@ -385,35 +569,34 @@ def guanliban():
         if request.form['test']=='search':
             db = connect_db()
             cur = db.cursor()
-            sql='select * from guanliban where specialities = %s'
+            sql='select * from class where specialities = %s'
             s=cur.execute(sql,(request.form['bbb']))
             if s!=0:
                 z=cur.fetchmany(s)
-                posts1 = []
+                posts = []
                 for value in z:
                     dict_data = {}
                     dict_data['ID'] = value[0]
                     dict_data['专业'] = value[1]
                     dict_data['年级'] = value[2]
                     dict_data['班级'] = value[3]
-                    posts1.append(dict_data)
-                flash(posts1)
+                    posts.append(dict_data)
             else:
                 flash('未查询到...')
         return redirect(url_for('guanliban'))
     # print posts
-    return render_template('teacher.html', posts=posts,titile=titile,path=path,url=url)
+    return render_template('admin.html', posts=posts,title=title,path=path,url=url)
 
 # 显示排课信息的函数页面
 @app.route('/paike_js', methods=['GET','POST'])
 def paike_js():
-    if not session.get('logged_th'):
+    if not session.get('logged_admin'):
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     # 调用数据库函数，获取数据
-    data = get_Table_Data('paike_js')
+    data = get_Table_Data('course_arrange')
     # 用列表的格式存放全部数据
-    titile={
+    title={
         'a':'课程名称',
         'b':'课程教室',
         'c':'课程时间'
@@ -431,7 +614,7 @@ def paike_js():
         if request.form['test']=='delete':
             db = connect_db()
             cur = db.cursor()
-            sql = 'delete from paike_js where course_name = %s'
+            sql = 'delete from course_arrange where course_name = %s'
             cur.execute(sql,(request.form['aaa']))
             db.commit()
             db.close()
@@ -439,38 +622,36 @@ def paike_js():
         if request.form['test']=='search':
             db = connect_db()
             cur = db.cursor()
-            sql='select * from paike_js where course_name = %s'
+            sql='select * from course_arrange where course_name = %s'
             s=cur.execute(sql,(request.form['bbb']))
             if s !=0:
                 z=cur.fetchmany(s)
-                posts1 = []
+                posts = []
                 for value in z:
                     dict_data = {}
                     dict_data['课程名称'] = value[0]
                     dict_data['课程教室'] = value[1]
                     dict_data['课程时间'] = value[2]
-                    posts1.append(dict_data)
-                flash(posts1)
+                    posts.append(dict_data)
             else:
                 flash('未查询到...')
         return redirect(url_for('paike_js'))
     # print posts
-    return render_template('teacher.html', posts=posts,titile=titile,path=path,url=url)
+    return render_template('admin.html', posts=posts,title=title,path=path,url=url)
 
 # 显示学生成绩的页面，包括调用学生成绩数据表
 @app.route('/xscj', methods=['GET','POST'])
 def xscj():
-    if not session.get('logged_th'):
+    if not session.get('logged_admin'):
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     # 调用数据库函数，获取数据
-    data = get_Table_Data('xueshengchengji')
+    data = get_Table_Data('grade')
     # 用列表的格式存放全部数据
-    titile={
+    title={
         'a':'学生学号',
-        'b':'学生姓名',
-        'c':'课程名称',
-        'd':'学生成绩'
+        'b':'课程名称',
+        'c':'学生成绩'
     }
     path="/xscj"
     url="xscj"
@@ -480,13 +661,13 @@ def xscj():
         dict_data['a'] = value[0]
         dict_data['b'] = value[1]
         dict_data['c'] = value[2]
-        dict_data['d'] = value[3]
+        # dict_data['d'] = value[3]
         posts.append(dict_data)
     if request.method=='POST':
         if request.form['test']=='delete':
             db = connect_db()
             cur = db.cursor()
-            sql = 'delete from xueshengchengji where course_name = %s'
+            sql = 'delete from grade where course_name = %s'
             cur.execute(sql,(request.form['aaa']))
             db.commit()
             db.close()
@@ -494,7 +675,7 @@ def xscj():
         if request.form['test']=='search':
            db = connect_db()
            cur = db.cursor()
-           sql='select * from xueshengchengji where course_name = %s'
+           sql='select * from grade where course_name = %s'
            s=cur.execute(sql,(request.form['bbb']))
            if s!=0:
                z=cur.fetchmany(s)
@@ -502,31 +683,30 @@ def xscj():
                for value in z:
                    dict_data = {}
                    dict_data['学生学号'] = value[0]
-                   dict_data['学生姓名'] = value[1]
-                   dict_data['课程名称'] = value[2]
-                   dict_data['学生成绩'] = value[3]
-                   posts1.append(dict_data)
-               flash(posts1)
+                   # dict_data['学生姓名'] = value[1]
+                   dict_data['课程名称'] = value[1]
+                   dict_data['学生成绩'] = value[2]
+                   posts.append(dict_data)
            else:
                flash('未查询到...')
         return redirect(url_for('xscj'))
     # print posts
-    return render_template('teacher.html',posts=posts,titile=titile,path=path,url=url)
+    return render_template('teacher.html',posts=posts,title=title,path=path,url=url)
 
 # 显示学生类别的页面，包括调用学生成绩数据表
 @app.route('/xslb', methods=['GET','POST'])
 def xslb():
-    if not session.get('logged_th'):
+    if not session.get('logged_admin'):
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     # 调用数据库函数，获取数据
-    data = get_Table_Data('xueshengleibie')
+    data = get_Table_Data('student')
     # 用列表的格式存放全部数据
-    titile={
+    title={
         'a':'学生姓名',
         'b':'学生学号',
-        'c':'学生专业',
-        'd':'学生班级'
+        # 'c':'学生专业',
+        'c':'学生班级'
     }
     path="/xslb"
     url="xslb"
@@ -536,13 +716,13 @@ def xslb():
         dict_data['a'] = value[0]
         dict_data['b'] = value[1]
         dict_data['c'] = value[2]
-        dict_data['d'] = value[3]
+        # dict_data['d'] = value[3]
         posts.append(dict_data)
     if request.method=='POST':
         if request.form['test']=='delete':
             db = connect_db()
             cur = db.cursor()
-            sql = 'delete from xueshengleibie where name = %s'
+            sql = 'delete from student where name = %s'
             cur.execute(sql,(request.form['aaa']))
             db.commit()
             db.close()
@@ -550,24 +730,24 @@ def xslb():
         if request.form['test']=='search':
           db = connect_db()
           cur = db.cursor()
-          sql='select * from xueshengleibie where name = %s'
+          sql='select * from student where name = %s'
           s=cur.execute(sql,(request.form['bbb']))
           if s!=0:
               z=cur.fetchmany(s)
-              posts1 = []
+              posts = []
               for value in z:
                   dict_data = {}
                   dict_data['学生姓名'] = value[0]
                   dict_data['学生学号'] = value[1]
-                  dict_data['学生专业'] = value[2]
+                  # dict_data['学生专业'] = value[2]
                   dict_data['学生班级'] = value[3]
-                  posts1.append(dict_data)
-              flash(posts1)
+                  posts.append(dict_data)
+              flash(posts)
           else:
               flash('未查询到...')
         return redirect(url_for('xslb'))
     # print posts
-    return render_template('teacher.html', posts=posts,titile=titile,path=path,url=url)
+    return render_template('teacher.html', posts=posts,title=title,path=path,url=url)
 
 
 # 显示田楼教室的函数页面
