@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.22, for macos10.15 (x86_64)
 --
--- Host: localhost    Database: SchoolManage
+-- Host: localhost    Database: csp
 -- ------------------------------------------------------
 -- Server version	8.0.22
 
@@ -23,8 +23,9 @@ DROP TABLE IF EXISTS `admin_login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin_login` (
-  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL
+  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -34,7 +35,7 @@ CREATE TABLE `admin_login` (
 
 LOCK TABLES `admin_login` WRITE;
 /*!40000 ALTER TABLE `admin_login` DISABLE KEYS */;
-INSERT INTO `admin_login` VALUES ('admin','admin');
+INSERT INTO `admin_login` VALUES ('admin','admin'),('Betty','helloworld'),('Tom','hahhahah');
 /*!40000 ALTER TABLE `admin_login` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,7 +52,7 @@ CREATE TABLE `class` (
   `grade` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `class` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,7 +61,7 @@ CREATE TABLE `class` (
 
 LOCK TABLES `class` WRITE;
 /*!40000 ALTER TABLE `class` DISABLE KEYS */;
-INSERT INTO `class` VALUES (6,'信息安全','2015级','3班'),(7,'信息安全','2014级','2班'),(8,'网络工程','2015级','1班'),(9,'网络工程','2016级','1班');
+INSERT INTO `class` VALUES (6,'信息安全','2015级','3班'),(7,'信息安全','2014级','2班'),(8,'网络工程','2015级','1班'),(9,'网络工程','2016级','1班'),(10,'网络安全','2020级','8班'),(11,'信息安全','2019级','1班');
 /*!40000 ALTER TABLE `class` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +88,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES ('操作系统',12,'开卷'),('网络安全',23,'闭卷');
+INSERT INTO `course` VALUES ('操作系统',12,'开卷'),('数据结构',14,'闭卷'),('编译原理',11,'闭卷'),('网络安全',23,'闭卷');
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,7 +114,7 @@ CREATE TABLE `course_arrange` (
 
 LOCK TABLES `course_arrange` WRITE;
 /*!40000 ALTER TABLE `course_arrange` DISABLE KEYS */;
-INSERT INTO `course_arrange` VALUES ('操作系统','教三B201','5、6节'),('网络安全','教一C502','7、8节');
+INSERT INTO `course_arrange` VALUES ('操作系统','教三B201','5、6节'),('数据结构','教五A301','2、3节'),('编译原理','教五A401','1、2节'),('网络安全','教一C502','7、8节');
 /*!40000 ALTER TABLE `course_arrange` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +142,7 @@ CREATE TABLE `grade` (
 
 LOCK TABLES `grade` WRITE;
 /*!40000 ALTER TABLE `grade` DISABLE KEYS */;
-INSERT INTO `grade` VALUES (12,'操作系统','78'),(23,'操作系统','88'),(23,'网络安全','98');
+INSERT INTO `grade` VALUES (12,'操作系统','78'),(23,'操作系统','88'),(23,'网络安全','98'),(30,'操作系统',NULL),(30,'数据结构','90'),(30,'编译原理','100'),(30,'网络安全',NULL),(31,'操作系统',NULL),(31,'数据结构',NULL),(31,'编译原理','79'),(31,'网络安全',NULL);
 /*!40000 ALTER TABLE `grade` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,7 +169,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES ('赵五',12,8),('刘晶',23,6);
+INSERT INTO `student` VALUES ('赵五',12,8),('刘晶',23,6),('姜桂',30,9),('林平',31,10);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -193,7 +194,7 @@ CREATE TABLE `student_login` (
 
 LOCK TABLES `student_login` WRITE;
 /*!40000 ALTER TABLE `student_login` DISABLE KEYS */;
-INSERT INTO `student_login` VALUES (12,'admin'),(23,'admin');
+INSERT INTO `student_login` VALUES (12,'admin'),(23,'admin'),(30,'hahhahahha'),(31,'hahhaha');
 /*!40000 ALTER TABLE `student_login` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -217,7 +218,7 @@ CREATE TABLE `teacher` (
 
 LOCK TABLES `teacher` WRITE;
 /*!40000 ALTER TABLE `teacher` DISABLE KEYS */;
-INSERT INTO `teacher` VALUES ('王三',12),('李四',23);
+INSERT INTO `teacher` VALUES ('高玉',11),('王三',12),('林岩',13),('李想',14),('李四',23);
 /*!40000 ALTER TABLE `teacher` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -242,7 +243,7 @@ CREATE TABLE `teacher_login` (
 
 LOCK TABLES `teacher_login` WRITE;
 /*!40000 ALTER TABLE `teacher_login` DISABLE KEYS */;
-INSERT INTO `teacher_login` VALUES (12,'admin'),(23,'teacherpassword');
+INSERT INTO `teacher_login` VALUES (11,'password'),(12,'admin'),(13,'hahhaah'),(14,'dhbyyds'),(23,'teacherpassword');
 /*!40000 ALTER TABLE `teacher_login` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -255,4 +256,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-20 11:23:31
+-- Dump completed on 2022-05-20 23:50:36
