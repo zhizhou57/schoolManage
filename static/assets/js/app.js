@@ -31,19 +31,27 @@ $(function() {
 //        alert(now_addr);
         var point;
         if(now_addr == "/login" ){point=0;}
+        if(now_addr == "/admin_index" ){point=0;}
         if(now_addr == "/teacher_index" ){point=0;}
         if(now_addr == "/student_index" ){point=0;}
+
         if(now_addr == "/guanliban" ){point=1;}
         if(now_addr == "/add_guanliban" ){point=1;}
-        if(now_addr == "/tjiaoshi" ){point=1;}
+        if(now_addr == "/classroom" ){point=1;}
+        if(now_addr == "/classroom_stu" ){point=1;}
+
         if(now_addr == "/jxjh" ){point=2;}
         if(now_addr == "/add_jxjh" ){point=2;}
-        if(now_addr == "/kecheng" ){point=2;}
+        if(now_addr == "/course" ){point=2;}
+        if(now_addr == "/course_stu" ){point=2;}
+
         if(now_addr == "/paike_js" ){point=3;}
         if(now_addr == "/add_paike_js" ){point=3;}
-        if(now_addr == "/chengji" ){point=3;}
+        if(now_addr == "/score" ){point=3;}
+
         if(now_addr == "/xscj" ){point=4;}
         if(now_addr == "/add_xscj" ){point=4;}
+
         if(now_addr == "/xslb" ){point=5;}
         if(now_addr == "/add_xslb" ){point=5;}
         $(".tpl-left-nav-item a").eq(point).addClass("active");
