@@ -222,7 +222,7 @@ def classroom_stu():
     cur = db.cursor()
 
     id = session['logged_st_id']
-    sql = 'select * from course_arrange where course_name in (select course_name from course where teacher_id=%s)'
+    sql = 'select * from course_arrange where course_name in (select course_name from grade where student_id=%s)'
     cur.execute(sql, (id))
     data=cur.fetchall()
     db.commit()
@@ -584,6 +584,8 @@ def jxjh():
         'b':'任课老师',
         'c':'考核方式',
     }
+    path="/jxjh"
+    url="jxjh"
     posts = []
     for value in data:
         dict_data = {}
@@ -610,7 +612,7 @@ def jxjh():
             flash('未查询到...')
         return redirect(url_for('jxjh'))
     # print posts
-    return render_template('admin.html', posts=posts,title=title)
+    return render_template('admin.html', posts=posts,title=title,path=path,url=url)
 
 # 显示排课信息的函数页面
 @app.route('/paike_js', methods=['GET','POST'])
