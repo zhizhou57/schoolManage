@@ -521,10 +521,10 @@ def guanliban():
     data = get_Table_Data('class')
     # 用列表的格式存放全部数据
     title={
-        'a':'学号',
+        'a':'班级编号',
         'b':'专业',
         'c':'年级',
-        'd':'班级'
+        'd':'班级名称'
     }
     path="/guanliban"
     url="guanliban"
@@ -776,7 +776,7 @@ def xslb():
 
 @app.route('/add_jxjh', methods=['POST','GET'])
 def add_jxjh():
-    if not session.get('logged_th'):
+    if not session.get('logged_admin'):
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     error = None
@@ -800,22 +800,22 @@ def add_jxjh():
 
 @app.route('/add_guanliban', methods=['POST','GET'])
 def add_guanliban():
-    if not session.get('logged_th'):
+    if not session.get('logged_admin'):
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     error = None
     titile={
-        'a':'学号',
+        'a':'班级编号',
         'b':'专业:',
         'c':'年级:',
-        'd':'班级:',
+        'd':'班级名称:',
         'add':'guanliban'
     }
     db = connect_db()
     cur = db.cursor()
     sql='insert into class(id, specialities,grade,class)VALUES(%s,%s,%s,%s)'
     if request.method == 'POST':
-        cur.execute(sql,(request.form['id']. request.form['specialities'],request.form['grade'],request.form['class']))
+        cur.execute(sql,(request.form['id'], request.form['specialities'],request.form['grade'],request.form['class']))
         db.commit()
         db.close()
         flash('添加成功！')
@@ -825,7 +825,7 @@ def add_guanliban():
 
 @app.route('/add_paike_js', methods=['POST','GET'])
 def add_paike_js():
-    if not session.get('logged_th'):
+    if not session.get('logged_admin'):
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     error = None
@@ -837,9 +837,9 @@ def add_paike_js():
     }
     db = connect_db()
     cur = db.cursor()
-    sql='insert into paike_js(course_name,course_class,course_plan)VALUES(%s,%s,%s)'
+    sql='insert into course_arrange(course_name,course_classroom,course_time)VALUES(%s,%s,%s)'
     if request.method == 'POST':
-        cur.execute(sql,(request.form['course_name'],request.form['course_class'],request.form['course_plan']))
+        cur.execute(sql,(request.form['course_name'],request.form['course_classroom'],request.form['course_time']))
         db.commit()
         db.close()
         flash('添加成功！')
@@ -849,22 +849,21 @@ def add_paike_js():
 
 @app.route('/add_xscj', methods=['POST','GET'])
 def add_xscj():
-    if not session.get('logged_th'):
+    if not session.get('logged_admin'):
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     error = None
     titile={
         'a':'学生学号',
-        'b':'学生姓名',
-        'c':'课程名称',
-        'd':'学生成绩',
+        'b':'课程名称',
+        'c':'学生成绩',
         'add':'xscj'
     }
     db = connect_db()
     cur = db.cursor()
-    sql='insert into xueshengchengji(course_name,student_name,student_class,student_score)VALUES(%s,%s,%s,%s)'
+    sql='insert into grade(student_id, course_name, student_score)VALUES(%s,%s,%s)'
     if request.method == 'POST':
-        cur.execute(sql,(request.form['course_name'],request.form['student_name'],request.form['student_class'],request.form['student_score']))
+        cur.execute(sql,(request.form['student_id'],request.form['course_name'],request.form['student_score']))
         db.commit()
         db.close()
         flash('添加成功！')
@@ -874,22 +873,21 @@ def add_xscj():
 
 @app.route('/add_xslb', methods=['POST','GET'])
 def add_xslb():
-    if not session.get('logged_th'):
+    if not session.get('logged_admin'):
         flash('请先登录，再访问页面...')
         return redirect(url_for('login'))
     error = None
     titile={
         'a':'学生姓名:',
         'b':'学生学号:',
-        'c':'学生专业:',
-        'd':'学生班级:',
+        'c':'学生班级:',
         'add':'xslb'
     }
     db = connect_db()
     cur = db.cursor()
-    sql='insert into xueshengleibie(name,number,specialities,class,password)VALUES(%s,%s,%s,%s,%s)'
+    sql='insert into student(name,id,class_id)VALUES(%s,%s,%s)'
     if request.method == 'POST':
-        cur.execute(sql,(request.form['name'],request.form['number'],request.form['specialities'],request.form['class'],request.form['number']))
+        cur.execute(sql,(request.form['name'],request.form['id'],request.form['class_id'],request.form['class']))
         db.commit()
         db.close()
         flash('添加成功!')
