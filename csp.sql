@@ -35,7 +35,8 @@ CREATE TABLE `admin_login` (
 
 LOCK TABLES `admin_login` WRITE;
 /*!40000 ALTER TABLE `admin_login` DISABLE KEYS */;
-INSERT INTO `admin_login` VALUES ('admin','admin'),('Betty','helloworld'),('Tom','hahhahah');
+INSERT INTO `admin_login` VALUES ('admin','21232f297a57a5a743894a0e4a801fc3'),('Betty','fc5e038d38a57032085441e7fe7010b0'),('Tom','9b591dfa7f54ba2c213a127b82445566');
+# INSERT INTO `admin_login` VALUES ('admin','admin'),('Betty','helloworld'),('Tom','hahhahah');
 /*!40000 ALTER TABLE `admin_login` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,7 +195,9 @@ CREATE TABLE `student_login` (
 
 LOCK TABLES `student_login` WRITE;
 /*!40000 ALTER TABLE `student_login` DISABLE KEYS */;
-INSERT INTO `student_login` VALUES (12,'admin'),(23,'admin'),(30,'hahhahahha'),(31,'hahhaha');
+INSERT INTO `student_login` VALUES (12,'21232f297a57a5a743894a0e4a801fc3'),(23,'21232f297a57a5a743894a0e4a801fc3'),
+                                   (30,'40e6a458394159b1c4e4f893889b6b07'),(31,'030c5ba9272a458be5b4e5d40dc376bd');
+# INSERT INTO `student_login` VALUES (12,'admin'),(23,'admin'),(30,'hahhahahha'),(31,'hahhaha');
 /*!40000 ALTER TABLE `student_login` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -243,7 +246,10 @@ CREATE TABLE `teacher_login` (
 
 LOCK TABLES `teacher_login` WRITE;
 /*!40000 ALTER TABLE `teacher_login` DISABLE KEYS */;
-INSERT INTO `teacher_login` VALUES (11,'password'),(12,'admin'),(13,'hahhaah'),(14,'dhbyyds'),(23,'teacherpassword');
+INSERT INTO `teacher_login` VALUES (11,'5f4dcc3b5aa765d61d8327deb882cf99'),(12,'21232f297a57a5a743894a0e4a801fc3'),
+                                   (13,'99cd5763f196577222f0d5608d03a1a8'),(14,'e6cf1e0d97da8711885388e9a270d741'),
+                                   (23,'6a4c692a7ba12da347c0d0b489af187d');
+# INSERT INTO `teacher_login` VALUES (11,'password'),(12,'admin'),(13,'hahhaah'),(14,'dhbyyds'),(23,'teacherpassword');
 /*!40000 ALTER TABLE `teacher_login` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

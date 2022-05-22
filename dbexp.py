@@ -4,6 +4,7 @@ from flask import Flask, flash, render_template
 from flask import request, session, g, redirect, url_for, abort
 # 导入MySQL库
 import pymysql
+import hashlib
 
 app = Flask(__name__)
 # 写好的数据库连接函数，
@@ -32,6 +33,11 @@ def connect_db():
     """Connects to the specific database."""
     db = pymysql.connect(host = 'localhost',user = 'root',charset = 'utf8',passwd = '231655',db = 'csp')
     return db
+def jm_md5(password):
+    m = hashlib.md5()
+    m.update(password.encode("UTF-8"))
+    password_md5 = m.hexdigest()
+    return password_md5
 # 启动服务器后运行的第一个函数，显示对应的网页内容
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -53,7 +59,7 @@ def login():
             if pas.get(request.form['username']) == None :
                 flash("账号错误，请重新输入...")
                 return render_template('login.html')
-            elif request.form['password'] != pas[request.form['username']]:
+            elif jm_md5(request.form['password']) != pas[request.form['username']]:
                 flash("密码错误，请重新输入...")
                 return render_template('login.html')
             else:
@@ -78,7 +84,7 @@ def login():
             if pas.get(int(request.form['username'])) == None :
                 flash("账号错误，请重新输入...")
                 return render_template('login.html')
-            elif request.form['password'] != pas[int(request.form['username'])]:
+            elif jm_md5(request.form['password']) != pas[int(request.form['username'])]:
                 flash("密码错误，请重新输入...")
                 return render_template('login.html')
             else:
@@ -102,7 +108,7 @@ def login():
             if pas.get(int(request.form['username'])) == None :
                 flash("账号错误，请重新输入...")
                 return render_template('login.html')
-            if pas[int(request.form['username'])] != request.form['password']:
+            if pas[int(request.form['username'])] != jm_md5(request.form['password']):
                 flash("密码错误，请重新输入...")
                 return render_template('login.html')
             else :
