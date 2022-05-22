@@ -790,9 +790,13 @@ def add_jxjh():
     }
     db = connect_db()
     cur = db.cursor()
-    sql='insert into course(coursename,teacher_id,course_exam)VALUES(%s,%s,%s)'
+    sql='insert into course(course_name,teacher_id,course_exam)VALUES(%s,%s,%s)'
     if request.method == 'POST':
-        cur.execute(sql,(request.form['coursename'],request.form['coursetime'],request.form['courseplan']))
+        try:
+            cur.execute(sql,(request.form['course_name'],request.form['teacher_id'],request.form['course_exam']))
+        except pymysql.IntegrityError:
+            flash("无该老师信息，请重新输入")
+            redirect(url_for('jxjh'))
         db.commit()
         db.close()
         flash('添加成功！')
@@ -841,7 +845,11 @@ def add_paike_js():
     cur = db.cursor()
     sql='insert into course_arrange(course_name,course_classroom,course_time)VALUES(%s,%s,%s)'
     if request.method == 'POST':
-        cur.execute(sql,(request.form['course_name'],request.form['course_classroom'],request.form['course_time']))
+        try:
+            cur.execute(sql,(request.form['course_name'],request.form['course_classroom'],request.form['course_time']))
+        except pymysql.IntegrityError:
+            flash("系统内无该课程，无法排课，请重新输入")
+            redirect(url_for('paike_js'))
         db.commit()
         db.close()
         flash('添加成功！')
@@ -865,7 +873,11 @@ def add_xscj():
     cur = db.cursor()
     sql='insert into grade(student_id, course_name, student_score)VALUES(%s,%s,%s)'
     if request.method == 'POST':
-        cur.execute(sql,(request.form['student_id'],request.form['course_name'],request.form['student_score']))
+        try:
+            cur.execute(sql,(request.form['student_id'],request.form['course_name'],request.form['student_score']))
+        except pymysql.IntegrityError:
+            flash("请确认课程、学生是否存在或成绩是否已添加")
+            redirect(url_for('xscj'))
         db.commit()
         db.close()
         flash('添加成功！')
@@ -889,7 +901,11 @@ def add_xslb():
     cur = db.cursor()
     sql='insert into student(name,id,class_id)VALUES(%s,%s,%s)'
     if request.method == 'POST':
-        cur.execute(sql,(request.form['name'],request.form['id'],request.form['class_id'],request.form['class']))
+        try:
+            cur.execute(sql,(request.form['name'],request.form['id'],request.form['class_id'],request.form['class']))
+        except pymysql.IntegrityError:
+            flash("无该班级信息，请重新输入")
+            redirect(url_for('xslb'))
         db.commit()
         db.close()
         flash('添加成功!')
