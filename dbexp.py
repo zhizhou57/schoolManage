@@ -132,7 +132,7 @@ def pwd():
             db = connect_db()
             cur = db.cursor()
             sql = 'update student_login set password=%s where number=%s'
-            cur.execute(sql,(request.form['pwd'],session['logged_st_id']))
+            cur.execute(sql,(jm_md5(request.form['pwd']),session['logged_st_id']))
             db.commit()
             db.close()
             flash('修改密码成功，请重新登录')
@@ -154,7 +154,7 @@ def pwdt():
             db = connect_db()
             cur = db.cursor()
             sql = 'update teacher_login set password=%s where username=%s'
-            cur.execute(sql,(request.form['pwd'],session['logged_th_id']))
+            cur.execute(sql,(jm_md5(request.form['pwd']),session['logged_th_id']))
             db.commit()
             db.close()
             flash('修改密码成功，请重新登录')
@@ -162,7 +162,7 @@ def pwdt():
             session.pop('logged_th_id',None)
             return render_template('login.html')
         else :
-            flash('两次密码不相等，请重新输入')
+            flash('两次密码不相同，请重新输入')
             return render_template('pwdt.html')
     return render_template('pwdt.html')
 
@@ -176,14 +176,14 @@ def pwda():
             db = connect_db()
             cur = db.cursor()
             sql = 'update admin_login set password=%s where username=%s'
-            cur.execute(sql,(request.form['pwd'], session['logged_admin']))
+            cur.execute(sql,(jm_md5(request.form['pwd']), session['logged_admin']))
             db.commit()
             db.close()
             flash('修改密码成功，请重新登录')
             session.pop('logged_admin',None)
             return render_template('login.html')
         else :
-            flash('两次密码不相等，请重新输入')
+            flash('两次密码不相同，请重新输入')
             return render_template('pwda.html')
     return render_template('pwda.html')
 
