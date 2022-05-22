@@ -445,7 +445,6 @@ def classroom():
             else:
                 flash('未查询到...')
         return redirect(url_for('classroom'))
-
     return render_template('teacher.html', posts=posts,title=title,path=path,url=url)
 
 # 显示课程的函数页面
@@ -552,18 +551,19 @@ def guanliban():
             s=cur.execute(sql,(request.form['bbb']))
             if s!=0:
                 z=cur.fetchmany(s)
+                print(z)
                 posts = []
                 for value in z:
                     dict_data = {}
-                    dict_data['ID'] = value[0]
-                    dict_data['专业'] = value[1]
-                    dict_data['年级'] = value[2]
-                    dict_data['班级'] = value[3]
+                    dict_data['a'] = value[0]
+                    dict_data['b'] = value[1]
+                    dict_data['c'] = value[2]
+                    dict_data['d'] = value[3]
                     posts.append(dict_data)
             else:
                 flash('未查询到...')
-        return redirect(url_for('guanliban'))
-    # print posts
+        # return redirect(url_for('guanliban'))
+    print(posts)
     return render_template('admin.html', posts=posts,title=title,path=path,url=url)
 
 # 显示学生成绩页面
@@ -596,21 +596,20 @@ def jxjh():
     if request.method=='POST':
         db = connect_db()
         cur = db.cursor()
-        sql='select * from xueshengchengji where course_name = %s'
+        sql='select course_name, name, course_exam from course, teacher where course.teacher_id = teacher.id and course_name = %s'
         s=cur.execute(sql,(request.form['bbb']))
         if s!=0:
             z=cur.fetchmany(s)
             posts = []
             for value in z:
                 dict_data = {}
-                dict_data['课程名称'] = value[0]
-                dict_data['任课老师'] = value[1]
-                dict_data['考核方式'] = value[2]
+                dict_data['a'] = value[0]
+                dict_data['b'] = value[1]
+                dict_data['c'] = value[2]
                 # dict_data['学生成绩'] = value[3]
                 posts.append(dict_data)
         else:
             flash('未查询到...')
-        return redirect(url_for('jxjh'))
     # print posts
     return render_template('admin.html', posts=posts,title=title,path=path,url=url)
 
@@ -656,9 +655,9 @@ def paike_js():
                 posts = []
                 for value in z:
                     dict_data = {}
-                    dict_data['课程名称'] = value[0]
-                    dict_data['课程教室'] = value[1]
-                    dict_data['课程时间'] = value[2]
+                    dict_data['a'] = value[0]
+                    dict_data['b'] = value[1]
+                    dict_data['c'] = value[2]
                     posts.append(dict_data)
             else:
                 flash('未查询到...')
@@ -709,10 +708,10 @@ def xscj():
                posts1 = []
                for value in z:
                    dict_data = {}
-                   dict_data['学生学号'] = value[0]
+                   dict_data['a'] = value[0]
                    # dict_data['学生姓名'] = value[1]
-                   dict_data['课程名称'] = value[1]
-                   dict_data['学生成绩'] = value[2]
+                   dict_data['b'] = value[1]
+                   dict_data['c'] = value[2]
                    posts.append(dict_data)
            else:
                flash('未查询到...')
@@ -764,10 +763,10 @@ def xslb():
               posts = []
               for value in z:
                   dict_data = {}
-                  dict_data['学生姓名'] = value[0]
-                  dict_data['学生学号'] = value[1]
+                  dict_data['a'] = value[0]
+                  dict_data['b'] = value[1]
                   # dict_data['学生专业'] = value[2]
-                  dict_data['学生班级'] = value[3]
+                  dict_data['c'] = value[3]
                   posts.append(dict_data)
               flash(posts)
           else:
